@@ -1,5 +1,4 @@
 plugins {
-    java
     `maven-publish`
     id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
 }
@@ -36,6 +35,7 @@ dependencies {
 }
 
 tasks.processResources {
+    outputs.upToDateWhen { false }
     val buildProps = project.properties
 
     filesMatching("pack.mcmeta") {

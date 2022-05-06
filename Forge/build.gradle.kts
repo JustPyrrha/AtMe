@@ -1,8 +1,9 @@
+import net.minecraftforge.gradle.common.util.RunConfig
+import net.minecraftforge.gradle.userdev.UserDevExtension
+
 plugins {
-    java
-    eclipse
-    id("net.minecraftforge.gradle") version ("5.1.+")
     `maven-publish`
+    id("net.minecraftforge.gradle") version ("5.1.+")
 }
 
 val minecraftVersion: String by project
@@ -18,6 +19,11 @@ base {
     archivesName.set(baseArchiveName)
 }
 
+dependencies {
+    "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
+    compileOnly(project(":Common"))
+}
+
 minecraft {
     mappings("official", minecraftVersion)
 
@@ -29,39 +35,50 @@ minecraft {
     }
 
     runs {
-        create("forge-client") {
-            workingDirectory(project.file("run"))
-            ideaModule("${rootProject.name}.${project.name}.main")
+        create("client") {
             taskName("Client")
+            workingDirectory(project.file("run"))
+            ideaModule("${rootProject.name}.${project.name}.main")
             mods {
                 create(modId) {
-                    source(sourceSets.main.get())
-                    source(project(":Common").sourceSets.main.get())
+                    sources(
+                        sourceSets.main.get(),
+                        project(":Common").sourceSets.main.get()
+                    )
                 }
             }
         }
 
-        create("forge-server") {
-            workingDirectory(project.file("run"))
-            ideaModule("${rootProject.name}.${project.name}.main")
+        create("server") {
             taskName("Server")
+            workingDirectory(project.file("run_server"))
+            ideaModule("${rootProject.name}.${project.name}.main")
             mods {
                 create(modId) {
-                    source(sourceSets.main.get())
-                    source(project(":Common").sourceSets.main.get())
+                    sources(
+                        sourceSets.main.get(),
+                        project(":Common").sourceSets.main.get()
+                    )
                 }
             }
         }
 
-        create("forge-data") {
-            workingDirectory(project.file("run"))
+        create("data") {
+            taskName("Data")
+            workingDirectory(project.file("run_game_test"))
             ideaModule("${rootProject.name}.${project.name}.main")
-            args("--mod", modId, "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources/"))
-            taskName("Data Gen")
+            args(
+                "--mod", modId,
+                "--all",
+                "--output", file("src/generated/resources/"),
+                "--existing", file("src/main/resources/")
+            )
             mods {
                 create(modId) {
-                    source(sourceSets.main.get())
-                    source(project(":Common").sourceSets.main.get())
+                    sources(
+                        sourceSets.main.get(),
+                        project(":Common").sourceSets.main.get()
+                    )
                 }
             }
         }
@@ -70,16 +87,12 @@ minecraft {
 
 sourceSets.main.get().resources.srcDir("src/generated/resources")
 
-dependencies {
-    minecraft("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
-    compileOnly(project(":Common"))
-}
-
 tasks.withType<JavaCompile> {
     source(project(":Common").sourceSets.main.get().allSource)
 }
 
 tasks.processResources {
+    outputs.upToDateWhen { false }
     from(project(":Common").sourceSets.main.get().resources)
 }
 

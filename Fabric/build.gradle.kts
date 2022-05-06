@@ -1,5 +1,4 @@
 plugins {
-    idea
     `maven-publish`
     id("fabric-loom") version "0.12-SNAPSHOT"
 }
