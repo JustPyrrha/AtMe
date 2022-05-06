@@ -22,7 +22,6 @@ allprojects {
     }
 
     tasks.withType<GenerateModuleMetadata> {
-
         enabled = false
     }
 }
@@ -30,6 +29,15 @@ allprojects {
 
 subprojects {
     apply(plugin = "java")
+    apply(plugin = "idea")
+    apply(plugin = "eclipse")
+
+    idea {
+        module {
+            excludeDirs.add(project.file("run"))
+            excludeDirs.add(project.file("run_server"))
+        }
+    }
 
     extensions.configure<JavaPluginExtension> {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -38,6 +46,9 @@ subprojects {
     }
 
     tasks {
+        compileTestJava {
+            options.isFork = true
+        }
         jar {
             manifest {
                 attributes(
