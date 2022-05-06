@@ -1,0 +1,337 @@
+{
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "quilt_loader": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "type": "string",
+          "pattern": "^[a-zA-Z\\d-_.]+$"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z\\d-_]{1,63}$"
+        },
+        "provides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/id"
+              },
+              "version": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "version": {
+          "type": "string"
+        },
+        "entrypoints": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "adapter": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ]
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "adapter": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "value"
+                      ]
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "plugins": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "adapter": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value"
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "jars": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "language_adapters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "depends": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dep"
+          }
+        },
+        "breaks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dep"
+          }
+        },
+        "load_type": {
+          "type": "string",
+          "enum": [
+            "always",
+            "if_possible",
+            "if_required"
+          ],
+          "default": "always"
+        },
+        "intermediate_mappings": {
+          "type": "string",
+          "pattern": "^[a-zA-Z\\d-_.]+:[a-zA-Z\\d-_.]+$",
+          "default": "org.quiltmc:hashed"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "contributors": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "contact": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "homepage": {
+                  "type": "string"
+                },
+                "issues": {
+                  "type": "string"
+                },
+                "sources": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "license": {
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/license"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/license"
+                  }
+                }
+              ]
+            },
+            "icon": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "group",
+        "id",
+        "version"
+      ]
+    },
+    "mixin": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "access_widener": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "minecraft": {
+      "type": "object",
+      "properties": {
+        "environment": {
+          "type": "string",
+          "enum": [
+            "*",
+            "client",
+            "dedicated_server"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "quilt_loader"
+  ],
+  "additionalProperties": true,
+  "definitions": {
+    "id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-zA-Z\\d-_.]+:[a-z][a-z\\d-_]{1,63}$"
+        },
+        {
+          "type": "string",
+          "pattern": "^[a-z][a-z\\d-_]{1,63}$"
+        }
+      ]
+    },
+    "dep": {
+      "oneOf": [
+        {
+          "type": "string",
+          "$ref": "#/definitions/id"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "$ref": "#/definitions/id"
+            },
+            "version": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "optional": {
+              "type": "boolean",
+              "default": false
+            },
+            "unless": {
+              "$ref": "#/definitions/dep"
+            }
+          },
+          "required": ["id"]
+        }
+      ]
+    },
+    "license": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "id",
+            "url"
+          ]
+        }
+      ]
+    }
+  }
+}

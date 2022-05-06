@@ -1,0 +1,22 @@
+# Generic
+.idea/
+.gradle/
+build/
+
+# Common
+Common/build/
+
+# Fabric
+Fabric/.gradle/
+Fabric/build/
+Fabric/run/
+
+# Forge
+Forge/.gradle/
+Forge/build/
+Forge/run/
+
+# Quilt
+Quilt/.gradle/
+Quilt/build/
+Quilt/run/

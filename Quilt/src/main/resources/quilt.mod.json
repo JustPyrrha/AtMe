@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "dev.pyrrha.atme",
+    "id": "atme",
+    "version": "${version}",
+    "entrypoints": {
+      "init": "dev.pyrrha.atme.quilt.AtMeQuilt"
+    },
+    "metadata": {
+      "name": "@Me",
+      "description": "Customizable player profiles.",
+      "license": {
+        "name": "GNU General Public License v3.0 or later",
+        "id": "GPL-3.0-or-later",
+        "url": "https://opensource.org/licenses/GPL-3.0"
+      },
+      "contact": {
+        "homepage": "https://atme.pyrrha.gay",
+        "sources": "https://github.com/JustPyrrha/AtMe"
+      },
+      "icon": "assets/atme/icon.png"
+    }
+  }
+}
